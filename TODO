@@ -1,0 +1,7 @@
+------------------2014.04.11-------------------------x---
+1.Depart main.cpp into *.h and *.cpp
+2.Solve the path Error for the cd and dir
+3.Deal with the exception file or the directory not existed
+4.Pipe and Redirecting job
+5.Get the argments typed by the user
+------------------Created By Lessmoon-------------------
