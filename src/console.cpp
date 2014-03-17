@@ -29,3 +29,9 @@ void console::execute(const std::string&file_name,const std::string&path)
     this -> put_str(d + "\n");
     execve(d.data(),x,x);
 }
+
+
+void console::put_error(const std::string&s)
+{
+    std::cerr<<s<<std::endl;
+}
