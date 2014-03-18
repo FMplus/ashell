@@ -22,7 +22,7 @@ void console::put_str(const std::string&s)
     std::cout<<s;
 }
 
-void console::execute(const std::string&file_name,const std::string&path)
+void console::execute(const std::string&file_name,const std::string&path)//在执行前要看是否存在
 {
     char*x[] = {NULL};
     std::string d = path + file_name;
