@@ -8,12 +8,13 @@
 
 /*Test for the env path of the execve*/
 
-char fn[] = "./hello";
+char fn[] = "/home/lsm/dev/ashell/hello";
 char dp[] = "/home/";
 
 void ex() {
 	char* arg_para[] = {NULL};
-	char* env_path[] = {dp,NULL};
+	char* env_path[] = {NULL};
+    chdir(dp);
 	execve(fn,arg_para,env_path);
 	std::cerr<<"What happened!?"<<std::endl;
 	//exit(0);
