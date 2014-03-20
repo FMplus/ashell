@@ -8,14 +8,15 @@
 #include<sys/wait.h>
 
 #include "shl_io_api.h"
-#include "dir_list.h"
+#include "env.h"
+
 #define IS_SSEQ 257
 
 class parser
 {
 public:
-    parser(shl_io_api*iom,runtime*rt)
-    :iom(iom),rt(rt)
+    parser(shl_io_api*iom,runtime*rt,environment*env)
+    :iom(iom),rt(rt),env(env)
     {}
 
     int skip_space(const std::string&s,const int n);
@@ -28,9 +29,9 @@ private:
     std::string line;
     std::string look;
 
-    shl_io_api*iom;
-    runtime*   rt;
-    class dir_list dlst;
+    shl_io_api*     iom;
+    runtime*        rt;
+    environment*    env;
 };
 
 #endif //PAESER

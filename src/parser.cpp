@@ -37,7 +37,7 @@ void parser::do_parse()
 {
     std::string buf;
     while(true){
-        iom -> put_str( dlst.combine() + "#");
+        iom -> put_str( env -> where() + "#");
         switch(this -> scan()){
         case '\0':
         case '\n':
@@ -58,7 +58,7 @@ void parser::do_parse()
                 pid_t pid = fork();
                 if(pid == 0){
                    // iom -> put_str("It is in child!!!\n");
-                    rt-> execute(look,dlst.combine());
+                    rt-> execute(look,"./");
                 }else if(pid > 0){
                    // iom -> put_str("It is in father!!\n");
                     wait(NULL);
@@ -73,8 +73,8 @@ void parser::do_parse()
 
 void parser::list_dir()
 {
-    std::string tmp = dlst.combine();
-    DIR*dir = opendir(tmp.data());
+    std::string cwd = env -> where();
+    DIR*dir = opendir(cwd.data());
     struct dirent* ent = NULL;
     while(NULL != (ent=readdir(dir))){
         iom -> put_str(std::string(ent -> d_name) + "\n");
@@ -84,20 +84,12 @@ void parser::list_dir()
 
 void parser::change_dir(const std::string&path)
 {
-    std::string tmp,buf;
-    int i = 0;
-    if(path[0] == '/'){
-        dlst.go_root();
-        i++;
-    }
-    while(i < path.length()){
-        for(;path[i] != '/'&&path[i] != '\0';i++){
-            buf += path[i];
-        }
-        if(buf.empty())
-            break;
-        dlst.push(buf);
-        i++;
-        buf = "";
+    int flag;
+    if((flag=env -> change_dir(path))==CH_OK){
+        //
+    }else if(flag == DIR_NOT_EXISTED){
+        //handle the failure
+    }else{
+        //handle the unknown failure
     }
 }

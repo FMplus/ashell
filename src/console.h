@@ -9,9 +9,9 @@
 #include<unistd.h>
 
 #include "shl_io_api.h"
+#include "envx.h"
 
-
-class console:public shl_io_api,public runtime
+class console:public shl_io_api,public runtime,public envx
 {
     public:
           std::string get_line();

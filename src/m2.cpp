@@ -6,7 +6,7 @@
 int main()
 {
     console*c = new console;
-    parser*p  = new parser(c,c);
+    parser*p  = new parser(c,c,c);
     p -> do_parse();
     delete p;
     delete c;
