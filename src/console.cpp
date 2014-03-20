@@ -23,11 +23,17 @@ void console::put_str(const std::string&s)
 }
 
 void console::execute(const std::string&file_name,const std::string&path)
-{
-    char*x[] = {NULL};
-    std::string d = path + file_name;
-    this -> put_str(d + "\n");
-    execve(d.data(),x,x);
+{    
+    char*args[] = {"/bin/ls",NULL};
+    char*envp[] = {"PATH=/bin/",NULL};
+    chdir(path.data());
+    std::string d = std::string("/bin/")+file_name; 
+     //this -> put_str(d + "\n");
+    this -> put_str(path + "\n");
+    this -> put_str(file_name + "\n");
+    execve(d.data(),args,envp);
+    this -> put_error("What happened???");
+    //exit(0);
 }
 
 

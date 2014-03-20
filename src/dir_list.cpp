@@ -25,6 +25,8 @@ void dir_list::push(const std::string&name)
             sseq.pop_back();
     }else if(name == ""){
 
+    }else if(name == "."){
+        //sseq.push_back(name);
     }else{
         sseq.push_back(name);
     }

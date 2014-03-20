@@ -57,10 +57,10 @@ void parser::do_parse()
             }else{
                 pid_t pid = fork();
                 if(pid == 0){
-                    iom -> put_str("It is in child!!!\n");
-        rt-> execute(look,dlst.combine());
+                   // iom -> put_str("It is in child!!!\n");
+                    rt-> execute(look,dlst.combine());
                 }else if(pid > 0){
-                    iom -> put_str("It is in father!!\n");
+                   // iom -> put_str("It is in father!!\n");
                     wait(NULL);
                 }else{
                     iom -> put_str("Fork wrong!!!\n");
