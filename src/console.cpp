@@ -1,4 +1,6 @@
 #include "console.h"
+#include<unistd.h>
+#include <fcntl.h>
 
 std::string console::get_line()
 {
@@ -26,10 +28,15 @@ void console::execute(const std::string&file_name,const std::string&path)//åœ¨æ‰
 {
     char*x[] = {NULL};
     std::string d = path + file_name;
+    if ( access(d.c_str(),X_OK) == -1 )
+    {
+        put_error("erro: "+file_name+" can not execute!");
+        return;
+    }
+    //else
     this -> put_str(d + "\n");
     execve(d.data(),x,x);
 }
-
 
 void console::put_error(const std::string&s)
 {

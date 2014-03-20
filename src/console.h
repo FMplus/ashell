@@ -5,6 +5,8 @@
 #include<string>
 #include<list>
 #include<stdio.h>
+#include<unistd.h>
+#include <fcntl.h>
 #include "shl_io_api.h"
 
 class console:public shl_io_api,public runtime

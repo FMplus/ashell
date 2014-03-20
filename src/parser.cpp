@@ -2,6 +2,7 @@
 #include "list_inode.h"
 #include "console.h"
 
+
 int parser::skip_space(const std::string&s,const int n)
 {
     int i = n;
@@ -84,23 +85,14 @@ void parser::list_dir()//dir
     closedir(dir);
 }
 
-void parser::change_dir(const std::string&path)//cd 在这里添加判断是否存在要进入的文件名的函数
+void parser::change_dir(const std::string&path)
 {
     //'path' is the dir_name to change , dlst.combine() is the current path;
-    DIR *pDir;
-    std::string curpath = dlst.combine();
-    pDir = opendir(curpath.c_str());
-    class list_inode dirlist;
-    struct dirent* ent = NULL;
-    while (NULL != (ent = readdir(pDir)))
-    {
-        dirlist.insert(ent);
-    }
-    if (dirlist.find(path) == NULL)
+    std::string curpath = dlst.combine() + path;
+    if ( opendir(curpath.c_str()) == NULL )
     {
         class console s;
-        s.put_error("erro: not find "+path);
-        dirlist.clear();
+        s.put_error("erro: can not find "+path);
         return;
     }
     //else
@@ -120,5 +112,4 @@ void parser::change_dir(const std::string&path)//cd 在这里添加判断是否�
         i++;
         buf = "";
     }
-    dirlist.clear();
-}
+}//change_dir
