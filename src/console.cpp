@@ -28,7 +28,7 @@ void console::execute(const std::string&file_name,const std::string&path)
     char*envp[] = {"PATH=/bin/",NULL};
     //chdir(path.data());
     std::string d = std::string("/bin/")+file_name; 
-     //this -> put_str(d + "\n");
+    //this -> put_str(d + "\n");
     //this -> put_str(path + "\n");
     //this -> put_str(file_name + "\n");
     execve(d.data(),args,envp);

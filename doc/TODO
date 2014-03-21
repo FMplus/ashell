@@ -1,3 +1,15 @@
+------------------2014.04.21----------------------------
+lessmoon&FMplus
+:2.Deal with the directory stuff:
+         for example,if he(the user) inputed "./something"
+         we should search it in the *CURRENT* PATH
+         or he just typed something like dir1/dir2/something,we should just execute the file in the /bin/ 
+            *AND* in the CURRENT directory
+         or something like "/dir1/dir2/something",we should execute from the root.
+         And because some reasons,we can do some optimlizations to the code frame.We can put the ./something
+          and /dir1/dir2/something situations into one(if using execve())
+    2.1:FMplus:
+------------------lessmoon------------------------------
 ------------------2014.04.17----------------------------
         -1.Depart main.cpp into *.h and *.cpp
 FMplus  :1.Solve the Error for the cd and dir(if file or the directory doesn't exist,you should give information)
