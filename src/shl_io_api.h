@@ -19,7 +19,12 @@ class runtime
     public:
     virtual void execute(const std::string&file_name,const std::string&path) = 0;
     virtual ~runtime(){}
-    //
+    virtual void exit()	= 0;
+    virtual int  fork()
+    {
+	return 0;
+    }
+	//
 };
 
 #endif //SHL_IO_API

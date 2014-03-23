@@ -33,11 +33,21 @@ void console::execute(const std::string&file_name,const std::string&path)
     //this -> put_str(file_name + "\n");
     execve(d.data(),args,envp);
     this -> put_error("What happened???");
-    //exit(0);
+    ::exit(0);
 }
 
 
 void console::put_error(const std::string&s)
 {
-    std::cerr<<s<<std::endl;
+    std::cerr<<s;
+}
+
+void console::exit()
+{
+    ::exit(0);
+}
+
+int console::fork()
+{
+	return ::fork();
 }

@@ -4,12 +4,14 @@
 #include<iostream>
 #include<string>
 #include<list>
-#include<stdio.h>
+#include<cstdio>
+#include<cstdlib>
 
 #include<unistd.h>
 
 #include "shl_io_api.h"
 #include "envx.h"
+
 
 class console:public shl_io_api,public runtime,public envx
 {
@@ -20,6 +22,8 @@ class console:public shl_io_api,public runtime,public envx
           void put_str(const std::string&s);
           void execute(const std::string&file_name,const std::string&path);
           void put_error(const std::string&s);
+          void exit();
+	  int  fork();
     private:
 
 };

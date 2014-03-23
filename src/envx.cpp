@@ -25,7 +25,7 @@ namespace{
 
 int envx::change_dir(const std::string& dir)
 {
-    if(this -> dir_is_existed(dir))
+    if(!this -> dir_is_existed(dir))
         return DIR_NOT_EXISTED;
     else if(!chdir(dir.data())){
         return CH_OK;

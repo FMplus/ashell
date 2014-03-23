@@ -55,11 +55,12 @@ void parser::do_parse()
             }else if(look == "exit"){
                 return;
             }else{
-                pid_t pid = fork();
+                pid_t pid = rt -> fork();
                 if(pid == 0){
                    // iom -> put_str("It is in child!!!\n");
-                    rt-> execute(look,"./");
-                }else if(pid > 0){
+                    rt -> execute(look,"./");
+                    rt -> exit();
+		}else if(pid > 0){
                    // iom -> put_str("It is in father!!\n");
                     wait(NULL);
                 }else{
@@ -88,8 +89,8 @@ void parser::change_dir(const std::string&path)
     if((flag=env -> change_dir(path))==CH_OK){
         //
     }else if(flag == DIR_NOT_EXISTED){
-        //handle the failure
+	iom -> put_error("NOT EXIST!\n");
     }else{
-        //handle the unknown failure
+        iom -> put_error("ERROR:UNKNOW ERROR!\n");
     }
 }
