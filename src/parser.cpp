@@ -47,20 +47,23 @@ void parser::do_parse()
                 int i = this->scan();
                 if(i!= '\0'&&i != '\n')
                     buf = look;
+                while(i!= '\0' && i != '\n')
+                    i = this -> scan();
                 line.clear();
                 this -> change_dir(buf);
-            }else if(look == "dir"){
-                this -> list_dir();
-                line.clear();
+            //}else if(look == "dir"){
+              //  this -> list_dir();
+                //line.clear();
             }else if(look == "exit"){
                 return;
             }else{
                 pid_t pid = rt -> fork();
+                //TODO Parase the paraments.
                 if(pid == 0){
                    // iom -> put_str("It is in child!!!\n");
                     rt -> execute(look,"./");
                     rt -> exit();
-		}else if(pid > 0){
+                }else if(pid > 0){
                    // iom -> put_str("It is in father!!\n");
                     wait(NULL);
                 }else{
