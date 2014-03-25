@@ -16,22 +16,25 @@ class parser
 {
 public:
     parser(shl_io_api*iom,runtime*rt,environment*env)
-    :iom(iom),rt(rt),env(env)
+    :iom(iom),rt(rt),env(env),peek(' ')
     {}
 
     int skip_space(const std::string&s,const int n);
-    int scan();
-    void do_parse();
+    int scan();//lexer
+    void read();//lexer
+    void move();//lexer
+    char read_move();//lexer
+    void do_parse();//parser
     void list_dir();
     void change_dir(const std::string&path);
 
 private:
-    std::string line;
     std::string look;
 
     shl_io_api*     iom;
     runtime*        rt;
     environment*    env;
+    char            peek;
 };
 
 #endif //PAESER

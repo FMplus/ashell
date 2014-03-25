@@ -9,27 +9,71 @@ int parser::skip_space(const std::string&s,const int n)
     return i;
 }
 
+void parser::move()
+{
+    this -> read();
+}
+
+void parser::read()
+{
+    peek = iom -> get_char();
+}
+
+char parser::read_move()
+{
+    char c = peek;
+    this -> move();
+    return c;
+}
+
 int parser::scan()
 {
     static int i = 0;
+    char c;
     look.clear();
-    if(i >= line.length()){
-         i = 0;
-         line =  iom -> get_line();
-    }
-    i = skip_space(line,i);
-    switch(line[i]){
-    case '\0':
-    case '\n':
-        return line[i++];
-    default:
-       while(line[i] != '\0'&&line[i] != ' '
-            &&line[i] != '\n'&&line[i] != '\t'){
-        look += line[i];
-        i++;
-       }
 
-       return IS_SSEQ;
+    l2:
+    switch(this -> peek){
+    case '\0':case '\n':
+        this -> peek = ' ';
+        return '\n';
+    case ' ':case '\t':
+        while(peek == ' '|| peek == '\t')
+            this -> move();
+        goto l2;
+    case '\"':case '\'':
+        c = this -> read_move();
+        /*
+         * considing that '\n' is the begining of a new line
+         */
+
+        while(peek != '\0' && peek != c){
+            if(peek == '\\'){
+                this -> move();
+                if(peek == '\"'||peek == '\'')
+                    look += this -> read_move();
+                else
+                    look += '\\';
+            }
+            else
+                look += this -> read_move();
+        }
+        this -> move();
+        /*
+         * If the next peek is ' ' or '\n' or '\t' we should return because it is a block.
+         * Or we should conitune the scan work.
+         */
+        if(peek != '\n' && peek != ' ' && peek != '\t')
+            goto l2;
+        return IS_SSEQ;
+    default:
+        do
+            look += read_move();
+        while(peek != '\0' && peek != '\n' && peek != ' '
+           && peek != '\t' && peek != '\"' && peek != '\'');
+        if(peek == '\'' || peek == '\"')
+            goto l2;
+        return IS_SSEQ;
     }
 }
 
@@ -49,19 +93,23 @@ void parser::do_parse()
                     buf = look;
                 while(i!= '\0' && i != '\n')
                     i = this -> scan();
-                line.clear();
                 this -> change_dir(buf);
-            //}else if(look == "dir"){
-              //  this -> list_dir();
-                //line.clear();
             }else if(look == "exit"){
                 return;
             }else{
+                int i ;
+                buf = look;
+                do{
+                    i = this -> scan();
+                    iom -> put_str(look + "\n");//TODO fetch parameters.
+                }while(i != '\n' && i != '\0');
+
+
                 pid_t pid = rt -> fork();
-                //TODO Parase the paraments.
+
                 if(pid == 0){
                    // iom -> put_str("It is in child!!!\n");
-                    rt -> execute(look,"./");
+                    rt -> execute(buf,"./");
                     rt -> exit();
                 }else if(pid > 0){
                    // iom -> put_str("It is in father!!\n");
@@ -69,7 +117,6 @@ void parser::do_parse()
                 }else{
                     iom -> put_str("Fork wrong!!!\n");
                 }
-
             }
         }
     }
