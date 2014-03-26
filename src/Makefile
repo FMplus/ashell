@@ -4,19 +4,19 @@ CPPC = g++ -c
 
 LD	 = g++
 
-CPPFLAGS =  
+CPPFLAGS =  -O3
 
 all: $(OBJS)
-	$(LD) -o ashell $(OBJS)
+	$(LD) -o ashell $(OBJS) 
 m2.o:m2.cpp console.o envx.o para_list.o parser.o 
-	$(CPPC) m2.cpp
-console.o:console.cpp envx.o
-	$(CPPC) console.cpp
+	$(CPPC) m2.cpp $(CPPFLAGS)
+console.o:console.cpp envx.o 
+	$(CPPC) console.cpp $(CPPFLAGS)
 envx.o:envx.cpp
-	$(CPPC) envx.cpp
+	$(CPPC) envx.cpp $(CPPFLAGS)
 para_list.o:para_list.cpp
-	$(CPPC) para_list.cpp
+	$(CPPC) para_list.cpp $(CPPFLAGS)
 parser.o:parser.cpp para_list.o console.o envx.o
-	$(CPPC) parser.cpp
+	$(CPPC) parser.cpp $(CPPFLAGS)
 clean:
 	-rm ashell $(OBJS)
