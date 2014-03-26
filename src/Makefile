@@ -1,16 +1,22 @@
 OBJS = m2.o console.o envx.o para_list.o parser.o
 
+CPPC = g++ -c
+
+LD	 = g++
+
+CPPFLAGS =  
+
 all: $(OBJS)
-	g++ -o ashell $(OBJS)
+	$(LD) -o ashell $(OBJS)
 m2.o:m2.cpp console.o envx.o para_list.o parser.o 
-	g++ -c m2.cpp
+	$(CPPC) m2.cpp
 console.o:console.cpp envx.o
-	g++ -c console.cpp
+	$(CPPC) console.cpp
 envx.o:envx.cpp
-	g++ -c envx.cpp
+	$(CPPC) envx.cpp
 para_list.o:para_list.cpp
-	g++ -c para_list.cpp
+	$(CPPC) para_list.cpp
 parser.o:parser.cpp para_list.o console.o envx.o
-	g++ -c parser.cpp
+	$(CPPC) parser.cpp
 clean:
 	-rm ashell $(OBJS)
