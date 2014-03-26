@@ -80,6 +80,7 @@ int parser::scan()
 void parser::do_parse()
 {
     std::string buf;
+    para_list   args;
     while(true){
         iom -> put_str( env -> where() + "#");
         switch(this -> scan()){
@@ -101,18 +102,18 @@ void parser::do_parse()
                 buf = look;
                 do{
                     i = this -> scan();
-                    iom -> put_str(look + "\n");//TODO fetch parameters.
+                    args.push(look);//fetch arguments from the buffer
+                    //iom -> put_str(look + "\n");
                 }while(i != '\n' && i != '\0');
-
 
                 pid_t pid = rt -> fork();
 
                 if(pid == 0){
-                   // iom -> put_str("It is in child!!!\n");
+                   // It is in child
                     rt -> execute(buf,"./");
                     rt -> exit();
                 }else if(pid > 0){
-                   // iom -> put_str("It is in father!!\n");
+                   // It is in father
                     wait(NULL);
                 }else{
                     iom -> put_str("Fork wrong!!!\n");
