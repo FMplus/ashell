@@ -18,7 +18,7 @@ class shl_io_api
 class runtime
 {
     public:
-    virtual void execute(const std::string&file_name,const std::para_list&args) = 0;
+    virtual void execute(const std::string&file_name,const para_list&args) = 0;
     virtual void execute(const std::string&file_name,const std::string&path) = 0;
     virtual ~runtime(){}
     virtual void exit()	= 0;
