@@ -1,8 +1,16 @@
-OBJS = main.o
+OBJS = m2.o console.o envx.o para_list.o parser.o
 
-edit : $(OBJS)
-	g++ -o edit $(OBJS)
-main.o: main.cpp
-	g++ -c main.cpp
+all: $(OBJS)
+	g++ -o ashell $(OBJS)
+m2.o:m2.cpp console.o envx.o para_list.o parser.o 
+	g++ -c m2.cpp
+console.o:console.cpp envx.o
+	g++ -c console.cpp
+envx.o:envx.cpp
+	g++ -c envx.cpp
+para_list.o:para_list.cpp
+	g++ -c para_list.cpp
+parser.o:parser.cpp para_list.o console.o envx.o
+	g++ -c parser.cpp
 clean:
-	-rm edit $(OBJS)
+	-rm ashell $(OBJS)
