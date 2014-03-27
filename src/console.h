@@ -20,6 +20,7 @@ class console:public shl_io_api,public runtime,public envx
           char get_char();
           void put_char(const char c);
           void put_str(const std::string&s);
+          void execute(const std::string&file_name,const para_list&args);
           void execute(const std::string&file_name,const std::string&path);
           void put_error(const std::string&s);
           void exit();

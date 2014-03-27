@@ -103,14 +103,16 @@ void parser::do_parse()
                 do{
                     i = this -> scan();
                     args.push(look);//fetch arguments from the buffer
-                    //iom -> put_str(look + "\n");
+                    iom -> put_str("111:" + look + "\n");
                 }while(i != '\n' && i != '\0');
 
                 pid_t pid = rt -> fork();
 
                 if(pid == 0){
                    // It is in child
-                    rt -> execute(buf,"./");
+                   iom -> put_str("121:" + buf + "\n");
+                    rt -> execute(buf,args);
+                    args.clear();
                     rt -> exit();
                 }else if(pid > 0){
                    // It is in father
