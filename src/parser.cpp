@@ -102,17 +102,18 @@ void parser::do_parse()
                 buf = look;
                 do{
                     i = this -> scan();
-                    args.push(look);//fetch arguments from the buffer
-                    iom -> put_str("111:" + look + "\n");
-                }while(i != '\n' && i != '\0');
+                    if(i != '\n' && i != '\0')
+                        args.push(look);
+                    else
+                        break;
+                        //fetch arguments from the buffer
+                }while(true);
 
                 pid_t pid = rt -> fork();
 
                 if(pid == 0){
                    // It is in child
-                   iom -> put_str("121:" + buf + "\n");
                     rt -> execute(buf,args);
-                    args.clear();
                     rt -> exit();
                 }else if(pid > 0){
                    // It is in father
@@ -120,6 +121,7 @@ void parser::do_parse()
                 }else{
                     iom -> put_str("Fork wrong!!!\n");
                 }
+                args.clear();
             }
         }
     }

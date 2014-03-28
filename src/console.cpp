@@ -40,13 +40,15 @@ void console::execute(const std::string&file_name,const std::string&path)
 
 void console::execute(const std::string&file_name,const para_list&args)
 {
-    const int S = args.size();
-    char** m = new char*[S];
-    for (int i = 0; i < args.size(); i++)
-    {
-        //std::cout << args.at(i).data() << std::endl;
-        m[i] = const_cast<char*>(args.at(i).data());
-    }
+    const int SIZE = args.size();
+    char** m = new char*[SIZE+2]; 
+   //std::cout<<"\""<<file_name<<"\""<<std::endl;
+    //m[0] = const_cast<char*>(file_name.data());
+    m[0] = const_cast<char*>(file_name.data()); 
+    m[SIZE+1] = NULL;
+    for(int i = 0; i < SIZE;i++)
+        m[i+1] = const_cast<char*>(args.at(i).data());
+
     if (execvp(file_name.data(),m) == -1)
     {
         //std::cout << errno << std::endl;
@@ -106,13 +108,8 @@ void console::execute(const std::string&file_name,const para_list&args)
             this -> put_error("ERROR : What happened?\n");
             break;
         }
-        for ( int j = 0; j < args.size(); j++)
-        {
-            delete [] m[j];
-        }
-        delete [] m;
-        ::exit(0);
-        return;
+
+        delete []m;
     }
 }
 
