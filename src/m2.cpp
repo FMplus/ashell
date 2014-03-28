@@ -1,7 +1,7 @@
 #include<iostream>
 
-#include"parser.h"
-#include"console.h"
+#include "parser.h"
+#include "console.h"
 
 int main()
 {
