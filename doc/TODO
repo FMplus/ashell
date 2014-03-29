@@ -1,4 +1,23 @@
-------------------2014.04.21----------------------------
+------------------2014.03.29----------------------------
+lessmoon&FMplus
+    1.do the pipe&redirct parse
+    2.create a class to contain the parser result of pipe and redirect
+    3.write a function to assign the pipe and redirect
+*DEADLINE*
+    2014.4.19
+*ASSIGNMENT*
+    lessmoon:1.create the class to contain the parser result
+             2.write a function to assign the pipe and redirect
+    FMplus  :do the pipe&redirect parse(include the sub-function call)
+*NOTE*
+    1.DO THE BEST AS YOU CAN.
+    2.`Sorry' and `I cannot' is *BULLSHIT*.
+*TIMELINE*
+    lessmoon -TALK ABOUT DETAIL-----CREATE CLASS INTERFACE----WRITE FUNCS&CLASS---MERGE&TEST--FINISH
+    FMplus   -TALK ABOUT DETAIL-LEARN ABOUT PIPE & PARSER CODE--WIRTE PARSE-------MERGE&TEST--FINISH
+    
+--------------------lessmoon----------------------------
+------------------2014.03.21----------------------------
 lessmoon&FMplus
 :2.Deal with the directory stuff:
          for example,if he(the user) inputed "./something"
@@ -10,7 +29,7 @@ lessmoon&FMplus
           and /dir1/dir2/something situations into one(if using execve())
     2.1:FMplus:
 ------------------lessmoon------------------------------
-------------------2014.04.17----------------------------
+------------------2014.03.17----------------------------
         -1.Depart main.cpp into *.h and *.cpp
 FMplus  :1.Solve the Error for the cd and dir(if file or the directory doesn't exist,you should give information)
 lessmoon:2.Deal with the directory stuff
