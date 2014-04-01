@@ -7,8 +7,8 @@ struct file_basic{
     typedef std::string string;
     virtual ~file_basic(){}
     virtual bool open(const string&) = 0;
-    virtual bool is_open()const;
-    virtual void close();
+    virtual bool is_open()const = 0;
+    virtual void close() = 0;
 };
 
 enum TYPE{
@@ -21,7 +21,7 @@ struct pipe_basic{
     virtual ~pipe_basic()
     {}
     
-    virtual bool is_open()const;
+    virtual bool is_open()const = 0;
     virtual int close_write() = 0;
     virtual int close_read() = 0;
     virtual int write_tie(TYPE) = 0;
