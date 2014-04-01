@@ -20,7 +20,7 @@ struct pipe_basic{
     {}
     virtual ~pipe_basic()
     {}
-    
+
     virtual int close_write() = 0;
     virtual int close_read() = 0;
     virtual int write_tie(TYPE) = 0;
