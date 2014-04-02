@@ -23,6 +23,7 @@ char parser::read_move()
 {
     char c = peek;
     this -> move();
+    //std::cout << peek << std::endl;
     return c;
 }
 
@@ -34,6 +35,10 @@ int parser::scan()
 
     l2:
     switch(this -> peek){
+    case '|':
+        look += this -> read_move();
+        //this -> peek = ' ';
+        return '|';
     case '\0':case '\n':
         this -> peek = ' ';
         return '\n';
@@ -66,11 +71,12 @@ int parser::scan()
         if(peek != '\n' && peek != ' ' && peek != '\t')
             goto l2;
         return IS_SSEQ;
+
     default:
         do
             look += read_move();
         while(peek != '\0' && peek != '\n' && peek != ' '
-           && peek != '\t' && peek != '\"' && peek != '\'');
+           && peek != '\t' && peek != '\"' && peek != '\''&&peek != '|');
         if(peek == '\'' || peek == '\"')
             goto l2;
         return IS_SSEQ;
@@ -102,8 +108,10 @@ void parser::do_parse()
                 buf = look;
                 do{
                     i = this -> scan();
-                    if(i != '\n' && i != '\0')
-                        args.push(look);
+                    if(i != '\n' && i != '\0'){
+                        iom -> put_str(look + " \n");
+                            args.push(look);
+                    }
                     else
                         break;
                         //fetch arguments from the buffer
