@@ -66,13 +66,13 @@ int pipex::write_tie(TYPE t)
 {
     switch(t){
     case STD_IN:
-        dup2(fd[1],0);
+        dup2(fd[1],STDIN_FILENO);
         break;
     case STD_OUT:
-        dup2(fd[1],1);
+        dup2(fd[1],STDOUT_FILENO);
         break;
     case STD_ERR:
-        dup2(fd[1],2);
+        dup2(fd[1],STDERR_FILENO);
         break;
     default:;
     }

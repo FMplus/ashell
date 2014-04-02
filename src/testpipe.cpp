@@ -12,7 +12,7 @@ int main()
     char*var[] = {NULL};
     if(h.is_open()){
         if(fork()){//in father
-            if(!fork()){
+            if(fork()){
                 h.close_read();
                 h.close_write();
                 wait(NULL);
