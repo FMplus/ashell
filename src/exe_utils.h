@@ -7,15 +7,16 @@
 #include<vector>
 
 struct exe_info{
-    typedef std::string string;    
-    
+    typedef std::string string;
+
     para_list args;
     string pathname;
-    
+
     void set_pathname(const string&);
     void push_arg(const string&);
     const string&at(const int )const;
     const string&get_path()const;
+    void clear_arg();
 };
 
 

@@ -42,29 +42,13 @@ void console::execute(const std::string&file_name,const para_list&args)
 {
     const int SIZE = args.size();
     char** m = new char*[SIZE+2];
-    int i = 0, offset = 0, pipesign = 0;
    //std::cout<<"\""<<file_name<<"\""<<std::endl;
     //m[0] = const_cast<char*>(file_name.data());
     m[0] = const_cast<char*>(file_name.data());
     m[SIZE+1] = NULL;
-    for( ; i < SIZE; i++ )
-    {
-        if (*(args.at(i).data()) == '|')
-        {
-            pipesign = 1;
-            m[i+1] = NULL;
-            //pipe(offset,i,m,read,write);//not exist now;
-            //std::cout << "1:|: " << offset << " " << i << "NULL" << std::endl;
-            offset = i + 1;
-        }
-        else
-        {
+    for( int i = 0; i < SIZE; i++ )
             m[i+1] = const_cast<char*>(args.at(i).data());
-            //std::cout << "2:|: " << offset << " " << i << m[i+1] << std::endl;
-        }
-    }
 
-    if(!pipesign)
     if (execvp(file_name.data(),m) == -1)
     {
         //std::cout << errno << std::endl;
@@ -125,11 +109,6 @@ void console::execute(const std::string&file_name,const para_list&args)
             break;
         }
 
-        delete []m;
-    }
-    else
-    {
-        //pipe(m,SIZE+1);//not exist now;
         delete []m;
     }
 }

@@ -22,6 +22,11 @@ const exe_info::string&exe_info::get_path()const
     return pathname;
 }
 
+void exe_info::clear_arg()
+{
+    this -> args.clear();
+}
+
 /*class execute_list*/
 
 execute_list::execute_list(){}

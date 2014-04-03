@@ -1,4 +1,5 @@
 #include "parser.h"
+//#include"exe_utils.h"
 
 int parser::skip_space(const std::string&s,const int n)
 {
@@ -104,16 +105,37 @@ void parser::do_parse()
             }else if(look == "exit"){
                 return;
             }else{
-                int i ;
-                buf = look;
+                int i, sign = 0;
+                execute_list elist;
+                exe_info *einfo = new exe_info;//how to define it?
+                //buf = look;
+                einfo -> set_pathname(look);
                 do{
                     i = this -> scan();
-                    if(i != '\n' && i != '\0'){
-                        iom -> put_str(look + " \n");
-                            args.push(look);
+                    if(i != '\n' && i != '\0' && i != '|')
+                    {
+                        if (sign == 1)
+                        {
+                            einfo -> set_pathname(look);
+                        }
+                        else
+                        {
+                            einfo -> push_arg(look);
+                        }
+                        sign = 0;
+                        //args.push(look);
+                    }
+                    else if ( i == '|' )
+                    {
+                        elist.push_exenode(einfo);
+                        einfo = new exe_info;
+                        sign = 1;
                     }
                     else
+                    {
+                        elist.push_exenode(einfo);
                         break;
+                    }
                         //fetch arguments from the buffer
                 }while(true);
 
@@ -121,7 +143,8 @@ void parser::do_parse()
 
                 if(pid == 0){
                    // It is in child
-                    rt -> execute(buf,args);
+                    this -> analysis(elist);
+                    //rt -> execute(buf,args);
                     rt -> exit();
                 }else if(pid > 0){
                    // It is in father
@@ -155,5 +178,23 @@ void parser::change_dir(const std::string&path)
 	iom -> put_error("NOT EXIST!\n");
     }else{
         iom -> put_error("ERROR:UNKNOW ERROR!\n");
+    }
+}
+
+void parser::analysis(execute_list elist)
+{
+    int SIZE = elist.size();
+    if (SIZE < 1)
+    {
+        iom -> put_error("ERROR:NOTHING TO EXECUTE!\n");
+        return;
+    }
+    else if (SIZE == 1)
+    {
+        rt -> execute(elist.at(0) -> get_path(),elist.at(0) -> args);
+    }
+    else
+    {
+        //这里是管道的连接；
     }
 }

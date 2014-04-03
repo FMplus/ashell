@@ -8,6 +8,7 @@
 #include<sys/wait.h>
 
 #include "shl_io_api.h"
+#include "exe_utils.h"
 #include "env.h"
 
 #define IS_SSEQ 257
@@ -27,6 +28,7 @@ public:
     void do_parse();//parser
     void list_dir();
     void change_dir(const std::string&path);
+    void analysis(execute_list elist);
 
 private:
     std::string look;
