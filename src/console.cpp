@@ -128,7 +128,10 @@ void console::execute(const std::string&file_name,const para_list&args)
         delete []m;
     }
     else
+    {
+        //pipe(m,SIZE+1);//not exist now;
         delete []m;
+    }
 }
 
 void console::put_error(const std::string&s)
