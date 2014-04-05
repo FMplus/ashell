@@ -1,8 +1,7 @@
-#include"pipex.h"
-
 #include<sys/types.h>
 #include<sys/stat.h>
 
+#include"pipex.h"
 
 /*struct filex*/
 filex::~filex()
@@ -100,6 +99,6 @@ int write_tie_file(file_basic&file)
 {
     filex& fdx = static_cast<filex&>(file);
     /*down_cast...I know it is dangerous,but we have to do like this*/
-/*    
+/*
 }
 */

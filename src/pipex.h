@@ -8,7 +8,7 @@
 
 
 struct filex:public file_basic{
-    public:    
+    public:
     friend class pipex;
     ~filex();
     bool open(const string&file_name);

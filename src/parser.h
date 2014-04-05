@@ -6,10 +6,13 @@
 #include<dirent.h>
 #include<unistd.h>
 #include<sys/wait.h>
+#include<cstdlib>
 
 #include "shl_io_api.h"
 #include "exe_utils.h"
 #include "env.h"
+#include "pipex.h"
+#include"pipe_api.h"
 
 #define IS_SSEQ 257
 
@@ -29,6 +32,7 @@ public:
     void list_dir();
     void change_dir(const std::string&path);
     void analysis(execute_list elist);
+    void ctrlpipe(execute_list elist,int i,pipex h);
 
 private:
     std::string look;

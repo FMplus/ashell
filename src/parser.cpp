@@ -1,5 +1,6 @@
 #include "parser.h"
-//#include"exe_utils.h"
+#include "pipex.h"
+#include"pipe_api.h"
 
 int parser::skip_space(const std::string&s,const int n)
 {
@@ -175,7 +176,7 @@ void parser::change_dir(const std::string&path)
     if((flag=env -> change_dir(path))==CH_OK){
         //
     }else if(flag == DIR_NOT_EXISTED){
-	iom -> put_error("NOT EXIST!\n");
+        iom -> put_error("NOT EXIST!\n");
     }else{
         iom -> put_error("ERROR:UNKNOW ERROR!\n");
     }
@@ -183,6 +184,7 @@ void parser::change_dir(const std::string&path)
 
 void parser::analysis(execute_list elist)
 {
+    pipex h;
     int SIZE = elist.size();
     if (SIZE < 1)
     {
@@ -195,6 +197,54 @@ void parser::analysis(execute_list elist)
     }
     else
     {
-        //这里是管道的连接；
+        this -> ctrlpipe(elist,0,h);
+    }
+}
+
+void parser::ctrlpipe(execute_list elist,int i,pipex h)
+{
+    if (h.is_open())
+    {
+        if (fork())
+        {
+            if( i < elist.size())
+            {
+                this -> ctrlpipe( elist, i+1, h);
+            }
+            else
+            {
+                h.close_read();
+                h.close_write();
+                wait(NULL);
+                wait(NULL);
+            }
+        }
+        else
+        {
+            if ( i == 0 )
+            {
+                h.close_read();
+                h.write_tie(STD_OUT);
+                rt -> execute(elist.at(i) -> get_path(),elist.at(i) -> args);
+                exit(0);
+            }
+            else if ( i == elist.size())
+            {
+                h.close_write();
+                h.read_tie(STD_IN);
+                rt -> execute(elist.at(i) -> get_path(),elist.at(i) -> args);
+                exit(0);
+            }
+            else
+            {
+                h.close_write();
+                h.read_tie(STD_IN);
+                h.write_tie(STD_OUT);
+                rt -> execute(elist.at(i) -> get_path(),elist.at(i) -> args);
+                h.close_read();
+                h.close_write();
+                exit(0);
+            }
+        }
     }
 }
