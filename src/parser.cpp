@@ -117,6 +117,7 @@ void parser::do_parse()
                     {
                         if (sign == 1)
                         {
+                            einfo = new exe_info;
                             einfo -> set_pathname(look);
                         }
                         else
@@ -129,7 +130,6 @@ void parser::do_parse()
                     else if ( i == '|' )
                     {
                         elist.push_exenode(einfo);
-                        einfo = new exe_info;
                         sign = 1;
                     }
                     else
