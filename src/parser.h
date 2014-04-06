@@ -29,10 +29,11 @@ public:
     void move();//lexer
     char read_move();//lexer
     void do_parse();//parser
+    int make_einfo(exe_info *einfo,execute_list* elist);
     void list_dir();
     void change_dir(const std::string&path);
-    void analysis(execute_list elist);
-    void ctrlpipe(execute_list elist,int i,pipex h);
+    void analysis(execute_list* elist);
+    void ctrlpipe(execute_list* elist,int i,pipex h);
 
 private:
     std::string look;

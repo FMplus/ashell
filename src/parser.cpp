@@ -106,38 +106,14 @@ void parser::do_parse()
             }else if(look == "exit"){
                 return;
             }else{
-                int i, sign = 0;
-                execute_list elist;
-                exe_info *einfo = new exe_info;//how to define it?
-                //buf = look;
-                einfo -> set_pathname(look);
+                execute_list *elist = new execute_list;
                 do{
-                    i = this -> scan();
-                    if(i != '\n' && i != '\0' && i != '|')
-                    {
-                        if (sign == 1)
-                        {
-                            einfo = new exe_info;
-                            einfo -> set_pathname(look);
-                        }
-                        else
-                        {
-                            einfo -> push_arg(look);
-                        }
-                        sign = 0;
-                        //args.push(look);
-                    }
-                    else if ( i == '|' )
-                    {
-                        elist.push_exenode(einfo);
-                        sign = 1;
-                    }
-                    else
-                    {
-                        elist.push_exenode(einfo);
+                    exe_info *einfo = new exe_info;//how to define it?
+                    einfo -> set_pathname(look);
+                    if (make_einfo(einfo,elist) == 0)
                         break;
-                    }
                         //fetch arguments from the buffer
+                    //std::cout << "size:" << int(elist -> size()) << std::cout;
                 }while(true);
 
                 pid_t pid = rt -> fork();
@@ -157,6 +133,30 @@ void parser::do_parse()
             }
         }
     }
+}
+
+int parser::make_einfo(exe_info* einfo,execute_list* elist)
+{
+    int i;
+    i = this -> scan();
+    //iom -> put_str("1:"+look+"\n");
+    while ( i != '\n' && i != '\0' )
+    {
+        if (i == '|')
+        {
+            //std::cout << "|" << std::endl;
+            elist->push_exenode(einfo);
+            i = this -> scan();
+            return 1;break;
+        }
+        einfo -> push_arg(look);
+        i = this -> scan();
+        //iom -> put_str("2:"+look+"\n");
+        //std::cout << "3:" << i << std::endl;
+    }
+    //std::cout << " end " << std::endl;
+    elist->push_exenode(einfo);
+    return 0;
 }
 
 void parser::list_dir()
@@ -182,10 +182,11 @@ void parser::change_dir(const std::string&path)
     }
 }
 
-void parser::analysis(execute_list elist)
+void parser::analysis(execute_list* elist)
 {
     pipex h;
-    int SIZE = elist.size();
+    int SIZE = elist -> size();
+    //std::cout << SIZE << std::endl;
     if (SIZE < 1)
     {
         iom -> put_error("ERROR:NOTHING TO EXECUTE!\n");
@@ -193,7 +194,7 @@ void parser::analysis(execute_list elist)
     }
     else if (SIZE == 1)
     {
-        rt -> execute(elist.at(0) -> get_path(),elist.at(0) -> args);
+        rt -> execute(elist -> at(0) -> get_path(),elist -> at(0) -> args);
     }
     else
     {
@@ -201,13 +202,15 @@ void parser::analysis(execute_list elist)
     }
 }
 
-void parser::ctrlpipe(execute_list elist,int i,pipex h)
+void parser::ctrlpipe(execute_list* elist,int i,pipex h)
 {
+    //std::cout << "i:" << i << std::endl;
+    //std::cout << "size:" << elist -> size() << std::endl;
     if (h.is_open())
     {
         if (fork())
         {
-            if( i < elist.size())
+            if( (i+1) < elist -> size())
             {
                 this -> ctrlpipe( elist, i+1, h);
             }
@@ -223,24 +226,27 @@ void parser::ctrlpipe(execute_list elist,int i,pipex h)
         {
             if ( i == 0 )
             {
+                //std::cout << "sender:" << std::endl;
                 h.close_read();
                 h.write_tie(STD_OUT);
-                rt -> execute(elist.at(i) -> get_path(),elist.at(i) -> args);
+                rt -> execute(elist -> at(i) -> get_path(),elist -> at(i) -> args);
                 exit(0);
             }
-            else if ( i == elist.size())
+            else if ( (i+1) == elist -> size())
             {
+                //std::cout << "get:" << std::endl;
                 h.close_write();
                 h.read_tie(STD_IN);
-                rt -> execute(elist.at(i) -> get_path(),elist.at(i) -> args);
+                rt -> execute(elist -> at(i) -> get_path(),elist -> at(i) -> args);
                 exit(0);
             }
             else
             {
+                //std::cout << "getsender:" << std::endl;
                 h.close_write();
                 h.read_tie(STD_IN);
                 h.write_tie(STD_OUT);
-                rt -> execute(elist.at(i) -> get_path(),elist.at(i) -> args);
+                rt -> execute(elist -> at(i) -> get_path(),elist -> at(i) -> args);
                 h.close_read();
                 h.close_write();
                 exit(0);
