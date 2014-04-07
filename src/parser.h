@@ -34,7 +34,7 @@ public:
     void list_dir();
     void change_dir(const std::string&path);
     void analysis(execute_list* elist);
-    void ctrlpipe(execute_list* elist,int i,pipex h);
+    void ctrlpipe(execute_list* elist,int i,pipex* pipe_1,pipex* pipe_2);
 
 private:
     std::string look;
