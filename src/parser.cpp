@@ -106,22 +106,20 @@ void parser::do_parse()
             }else if(look == "exit"){
                 return;
             }else{
-                execute_list *elist = new execute_list;
+                execute_list* elist = new execute_list;
                 do{
-                    exe_info *einfo = new exe_info;//how to define it?
-                    einfo -> set_pathname(look);
+                    exe_info* einfo = pushpath();
                     if (make_einfo(einfo,elist) == 0)
                         break;
-                        //fetch arguments from the buffer
+                    //fetch arguments from the buffer
                     //std::cout << "size:" << int(elist -> size()) << std::cout;
-                }while(true);
+                }while((this -> scan()) != '\n');
 
                 pid_t pid = rt -> fork();
 
                 if(pid == 0){
                    // It is in child
                     this -> analysis(elist);
-                    //rt -> execute(buf,args);
                     rt -> exit();
                 }else if(pid > 0){
                    // It is in father
@@ -129,34 +127,36 @@ void parser::do_parse()
                 }else{
                     iom -> put_str("Fork wrong!!!\n");
                 }
-                args.clear();
             }
         }
     }
 }
 
+exe_info* parser::pushpath()
+{
+    exe_info* einfo = new exe_info;
+    einfo -> set_pathname(look);
+    return einfo;
+}
+
 int parser::make_einfo(exe_info* einfo,execute_list* elist)
 {
-    int i;
-    i = this -> scan();
-    //iom -> put_str("1:"+look+"\n");
-    while ( i != '\n' && i != '\0' )
+    while(true)
     {
-        if (i == '|')
+        switch(this -> scan())
         {
-            //std::cout << "|" << std::endl;
-            elist->push_exenode(einfo);
-            i = this -> scan();
-            return 1;break;
+            case '\n':
+            case '\0':
+                elist -> push_exenode(einfo);
+                return 0;break;
+            case '|':
+                elist -> push_exenode(einfo);
+                return 1;break;
+            default:
+                einfo -> push_arg(look);
+                break;
         }
-        einfo -> push_arg(look);
-        i = this -> scan();
-        //iom -> put_str("2:"+look+"\n");
-        //std::cout << "3:" << i << std::endl;
     }
-    //std::cout << " end " << std::endl;
-    elist->push_exenode(einfo);
-    return 0;
 }
 
 void parser::list_dir()

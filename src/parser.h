@@ -29,6 +29,7 @@ public:
     void move();//lexer
     char read_move();//lexer
     void do_parse();//parser
+    exe_info* pushpath();
     int make_einfo(exe_info *einfo,execute_list* elist);
     void list_dir();
     void change_dir(const std::string&path);
