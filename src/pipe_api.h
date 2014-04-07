@@ -12,7 +12,7 @@ struct file_basic{
 };
 
 enum TYPE{
-    STD_IN,STD_OUT,STD_ERR
+    STD_IN,STD_OUT,STD_ERR,NONE
 };
 
 struct pipe_basic{
