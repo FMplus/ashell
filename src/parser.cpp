@@ -178,8 +178,8 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
         iom -> put_error("ERROR:NOTHING TO EXECUTE!\n");
         return;
     }
-    if (fork())
-        wait(NULL);
+    //if (fork())
+        //wait(NULL);
     else
     {
         int i = 0;
@@ -230,6 +230,6 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
             delete pipe_1;
         if (pipe_2 != NULL)
             delete pipe_2;
-        exit(0);
+        //exit(0);
     }
 }
