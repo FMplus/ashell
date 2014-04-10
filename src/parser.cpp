@@ -175,76 +175,63 @@ void parser::change_dir(const std::string&path)
 void parser::analysis(execute_list* elist)//analysis the option to execute
 {
     int SIZE = elist -> size();
-    //std::cout << SIZE << std::endl;
-    if (SIZE < 1){
+    if (SIZE < 1)
+    {
         iom -> put_error("ERROR:NOTHING TO EXECUTE!\n");
         return;
     }
-    else if (SIZE == 1){
-        if (fork())
-            wait(NULL);
-        else{
-            rt -> execute(elist -> at(0) -> get_path(),elist -> at(0) -> args);
-            exit(0);
-        }
-    }
-    else{
-        if (fork())
-            wait(NULL);
-        else{
-            pipex* pipe_1 = NULL;
-            pipex* pipe_2 = new pipex;
-            this -> ctrlpipe(elist,0,pipe_1,pipe_2);
-            if (pipe_1 != NULL)
-                delete pipe_1;
-            if (pipe_2 != NULL)
-                delete pipe_2;
-            exit(0);
-        }
-    }
-}
-
-void parser::ctrlpipe(execute_list* elist,int i,pipex* pipe_1,pipex* pipe_2)
-{
-    if (fork())//father
+    if (fork())
+        wait(NULL);
+    else
     {
+        int i = 0;
+        pipex* pipe_1 = NULL;
+        pipex* pipe_2 = new pipex;
+        do{
+            if (fork())//father
+            {
+                if (pipe_1 != NULL)
+                    delete pipe_1;
+                pipe_1 = pipe_2;
+                if( (i+1) < SIZE )
+                    pipe_2 = new pipex;
+                else
+                {
+                    wait(NULL);
+                    wait(NULL);
+                    if (pipe_2 != NULL)//make pipe_2 null while i < (size-1)
+                    {
+                        delete pipe_2;
+                        pipe_2 = NULL;
+                    }
+                    if (pipe_1 != NULL)
+                    {
+                        pipe_1 -> close_read();
+                        pipe_1 -> close_write();
+                    }
+                }
+            }
+            else//child
+            {
+                if (pipe_1 != NULL)//stdin
+                {
+                    pipe_1 -> close_write();
+                    pipe_1 -> read_tie(STD_IN);
+                }
+                if (pipe_2 != NULL && ((i+1) < SIZE))//stdout
+                {
+                    pipe_2 -> close_read();
+                    pipe_2 -> write_tie(STD_OUT);
+                }
+                rt -> execute(elist -> at(i) -> get_path(),elist -> at(i) -> args);
+                exit(1);
+            }i++;
+        }while( i < SIZE);
+
         if (pipe_1 != NULL)
             delete pipe_1;
-        pipe_1 = pipe_2;
-        if( (i+1) < elist -> size())
-        {
-            pipe_2 = new pipex;
-            this -> ctrlpipe( elist, i+1, pipe_1, pipe_2);
-        }
-        else
-        {
-            wait(NULL);
-            wait(NULL);
-            if (pipe_2 != NULL)//make pipe_2 null while i < (size-1)
-            {
-                delete pipe_2;
-                pipe_2 = NULL;
-            }
-            if (pipe_1 != NULL)
-            {
-                pipe_1 -> close_read();
-                pipe_1 -> close_write();
-            }
-        }
-    }
-    else//child
-    {
-        if (pipe_1 != NULL)//stdin
-        {
-            pipe_1 -> close_write();
-            pipe_1 -> read_tie(STD_IN);
-        }
-        if (pipe_2 != NULL && ((i+1) < elist -> size()))//stdout
-        {
-            pipe_2 -> close_read();
-            pipe_2 -> write_tie(STD_OUT);
-        }
-        rt -> execute(elist -> at(i) -> get_path(),elist -> at(i) -> args);
-        exit(1);
+        if (pipe_2 != NULL)
+            delete pipe_2;
+        exit(0);
     }
 }
