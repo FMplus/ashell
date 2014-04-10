@@ -1,0 +1,10 @@
+2014.4.10
+has the question with the sign " " "
+such as :cat "envx.h"|grep class
+        :cat envx.h | grep class|grep "envx"         is wrong.
+but     :cat envx.h | grep "class"|grep envx         is right.
+
+e.g:
+/home/hdt/fshell/ashell/src#cat pipex.cpp| grep "m"|grep "b"
+用法: grep [选项]... PATTERN [FILE]...
+试用‘grep --help’来获得更多信息。

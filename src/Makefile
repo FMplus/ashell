@@ -2,11 +2,11 @@ OBJS = m2.o console.o envx.o para_list.o parser.o exe_utils.o pipex.o
 TEST = pipex.o testpipe.o
 TESTAPP = sender getter
 
-CPPC = g++ -c
+CPPC = g++ -c -g
 
 LD	 = g++
 
-CPPFLAGS =  -O3
+CPPFLAGS =  -O3 -g
 
 all: $(OBJS)
 	$(LD) -o ashell $(OBJS) 

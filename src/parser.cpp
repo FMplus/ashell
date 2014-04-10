@@ -112,8 +112,6 @@ void parser::do_parse()
                     exe_info* einfo = pushpath();
                     if (make_einfo(einfo,elist) == 0)
                         break;
-                    //fetch arguments from the buffer
-                    //std::cout << "size:" << int(elist -> size()) << std::cout;
                 }while((this -> scan()) != '\n');
 
                 this -> analysis(elist);
