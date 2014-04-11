@@ -184,28 +184,29 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
     {
         int i = 0;
         pipex* pipe_1 = NULL;
-        pipex* pipe_2 = new pipex;
+        
+        pipex* pipe_2 = NULL;
+        if(SIZE > 1)
+            pipe_2 = new pipex;
         do{
             if (fork())//father
             {
-                if (pipe_1 != NULL)
+                if (pipe_1 != NULL){
+                    pipe_1 -> close_read();
                     delete pipe_1;
-                pipe_1 = pipe_2;
-                if( (i+1) < SIZE )
+                }
+                if( i < SIZE ){
+                    if(pipe_2 != NULL)
+                        pipe_2 -> close_write();
+                    pipe_1 = pipe_2;
                     pipe_2 = new pipex;
+                }
                 else
                 {
-                    wait(NULL);
-                    wait(NULL);
                     if (pipe_2 != NULL)//make pipe_2 null while i < (size-1)
                     {
                         delete pipe_2;
                         pipe_2 = NULL;
-                    }
-                    if (pipe_1 != NULL)
-                    {
-                        pipe_1 -> close_read();
-                        pipe_1 -> close_write();
                     }
                 }
             }
@@ -223,7 +224,8 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
                 }
                 rt -> execute(elist -> at(i) -> get_path(),elist -> at(i) -> args);
                 exit(1);
-            }i++;
+            }
+            i++;
         }while( i < SIZE);
 
         if (pipe_1 != NULL)
@@ -231,5 +233,6 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
         if (pipe_2 != NULL)
             delete pipe_2;
         //exit(0);
+        for(int i = 0;i < SIZE;i++) wait(NULL);
     }
 }
