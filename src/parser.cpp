@@ -68,10 +68,10 @@ int parser::scan()
         }
         this -> move();
         /*
-         * If the next peek is ' ' or '\n' or '\t' we should return because it is a block.
+         * If the next peek is ' ','|','\n' or '\t' we should return because it is a block.
          * Or we should conitune the scan work.
          */
-        if(peek != '\n' && peek != ' ' && peek != '\t')
+        if(peek != '\n' && peek != ' ' && peek != '\t' && peek != '|')
             goto l2;
         return IS_SSEQ;
 
