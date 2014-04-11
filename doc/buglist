@@ -18,3 +18,21 @@ e.g:
 bool filex::open(const string&file_name)
 段错误 (核心已转储)
 
+2014.4.11
+问题语句：
+/home/hdt/fshell/ashell/src#cat pipes.cpp|grep m
+cat: pipes.cgrep: 没有那个文件或目录
+cat: m: 没有那个文件或目录
+/home/hdt/fshell/ashell/src#cat pipex.cpp|grep m
+bool filex::open(const string&file_name)
+   this -> file_id = ::open(file_name.data(),O_CREAT|O_WRONLY);
+/home/hdt/fshell/ashell/src#cat pipex.cpp|grep m|grep b
+bool filex::open(const string&file_name)
+/home/hdt/fshell/ashell/src#cat pipes.cpp|greo m
+ERROR : ENOENT : The Filename not exist.
+cat: pipes.cpp: 没有那个文件或目录
+/home/hdt/fshell/ashell/src#cat pipes.cpp|grep m
+cat: pipes.cpp: 没有那个文件或目录
+
+（未知错误）第一条与最后一条的输入指令相同，但是所输出结果不同，上述结果中只有第一条输出结果与预期不符。
+

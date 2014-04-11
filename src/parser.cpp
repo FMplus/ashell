@@ -178,13 +178,11 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
         iom -> put_error("ERROR:NOTHING TO EXECUTE!\n");
         return;
     }
-    //if (fork())
-        //wait(NULL);
     else
     {
         int i = 0;
         pipex* pipe_1 = NULL;
-        
+
         pipex* pipe_2 = NULL;
         if(SIZE > 1)
             pipe_2 = new pipex;
@@ -203,7 +201,7 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
                 }
                 else
                 {
-                    if (pipe_2 != NULL)//make pipe_2 null while i < (size-1)
+                    if (pipe_2 != NULL)//make pipe_2 null while i < size
                     {
                         delete pipe_2;
                         pipe_2 = NULL;
@@ -232,7 +230,7 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
             delete pipe_1;
         if (pipe_2 != NULL)
             delete pipe_2;
-        //exit(0);
+
         for(int i = 0;i < SIZE;i++) wait(NULL);
     }
 }
