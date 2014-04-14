@@ -14,7 +14,8 @@
 #include "pipex.h"
 #include"pipe_api.h"
 
-#define IS_SSEQ 257
+#define IS_SSEQ   257
+#define ADD_RDRCT 258
 
 class parser
 {

@@ -26,7 +26,6 @@ char parser::read_move()
 {
     char c = peek;
     this -> move();
-    //std::cout << peek << std::endl;
     return c;
 }
 
@@ -38,9 +37,18 @@ int parser::scan()
 
     l2:
     switch(this -> peek){
+    case '>':
+        look += this -> read_move();
+        if (peek == '>')
+        {
+            look += this -> read_move();
+            //while(peek == '>')   error;
+            return ADD_RDRCT;//additional rediection
+        }
+        else
+            return '>';
     case '|':
         look += this -> read_move();
-        //this -> peek = ' ';
         return '|';
     case '\0':case '\n':
         this -> peek = ' ';
@@ -109,6 +117,7 @@ void parser::do_parse()
             }else{
                 execute_list* elist = new execute_list;
                 do{
+                    //std::cout << look << std::endl;
                     exe_info* einfo = pushpath();
                     if (make_einfo(einfo,elist) == 0)
                         break;
@@ -144,6 +153,7 @@ int parser::make_einfo(exe_info* einfo,execute_list* elist)
                 einfo -> push_arg(look);
                 break;
         }
+        //std::cout << look << std::endl;
     }
 }
 
@@ -184,7 +194,7 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
     {
         int i = 0;
         pipex* pipe_1 = NULL;
-        
+
         pipex* pipe_2 = NULL;
         if(SIZE > 1)
             pipe_2 = new pipex;
