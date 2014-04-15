@@ -30,6 +30,7 @@ class execute_list{
     typedef std::vector<exe_info*>   exe_list;
     private:
     bool last_is_redirected_to_file;
+    bool last_is_apend_to_file;
     string redirected_file_name;
     public:
     exe_list exes;
@@ -38,7 +39,9 @@ class execute_list{
     ~execute_list();//destructor
     public:
     void set_redirected(const bool choice);//set last is redirected
-    bool is_redirected()const;//last exe is redirected
+    void set_apend(const bool choice);//set last is apend
+    bool is_redirected()const;//last exe is apend
+    bool is_apend()const;//last exe is redirected
     void set_pathname(const string&);
     const string&get_pathname()const;
     void push_exenode(exe_info*);//push the exe node info to the container

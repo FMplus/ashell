@@ -29,7 +29,11 @@ void exe_info::clear_arg()
 
 /*class execute_list*/
 
-execute_list::execute_list(){}
+execute_list::execute_list()
+{
+    last_is_redirected_to_file = false;
+    last_is_apend_to_file = false;
+}
 
 execute_list::~execute_list()
 {
@@ -41,9 +45,19 @@ void execute_list::set_redirected(const bool choice)
     last_is_redirected_to_file = choice;
 }
 
+void execute_list::set_apend(const bool choice)
+{
+    last_is_apend_to_file = choice;
+}
+
 bool execute_list::is_redirected()const
 {
     return last_is_redirected_to_file;
+}
+
+bool execute_list::is_apend()const
+{
+    return last_is_apend_to_file;
 }
 
 void execute_list::set_pathname(const string&pathname)

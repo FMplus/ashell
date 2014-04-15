@@ -42,8 +42,7 @@ int parser::scan()
         if (peek == '>')
         {
             look += this -> read_move();
-            //while(peek == '>')   error;
-            return ADD_RDRCT;//additional rediection
+            return IS_APEND;//additional rediection
         }
         else
             return '>';
@@ -79,7 +78,7 @@ int parser::scan()
          * If the next peek is ' ','|','\n' or '\t' we should return because it is a block.
          * Or we should conitune the scan work.
          */
-        if(peek != '\n' && peek != ' ' && peek != '\t' && peek != '|')
+        if(peek != '\n' && peek != ' ' && peek != '\t' && peek != '|' && peek != '>')
             goto l2;
         return IS_SSEQ;
 
@@ -87,7 +86,7 @@ int parser::scan()
         do
             look += read_move();
         while(peek != '\0' && peek != '\n' && peek != ' '
-           && peek != '\t' && peek != '\"' && peek != '\''&&peek != '|');
+           && peek != '\t' && peek != '\"' && peek != '\''&& peek != '|' && peek != '>');
         if(peek == '\'' || peek == '\"')
             goto l2;
         return IS_SSEQ;
@@ -116,20 +115,90 @@ void parser::do_parse()
                 return;
             }else{
                 execute_list* elist = new execute_list;
-                do{
-                    //std::cout << look << std::endl;
-                    exe_info* einfo = pushpath();
-                    if (make_einfo(einfo,elist) == 0)
-                        break;
-                }while((this -> scan()) != '\n');
 
+                if (this -> input(elist))
+                    break;
+
+                //std::cout << "filename: " << elist -> get_pathname() << std::endl;
                 this -> analysis(elist);
-            }
+            }break;
+        default:
+            iom -> put_error("ERROR: UNKNOWN ERROR!\n");
+            break;
         }
     }
 }
 
-exe_info* parser::pushpath()
+int parser::input(execute_list* elist)
+{
+    int x = this -> command(elist);
+    switch (x)
+    {
+    case 0:
+        return 0;break;
+    case '|':
+        this -> input(elist);break;
+    case '>':
+    case IS_APEND:{
+        if ( this -> scan() == IS_SSEQ)
+        {
+            elist -> set_pathname(look);
+            if (this -> scan() == '\n')
+                return 0;
+            else
+            {
+                iom -> put_error("ERROR: DOES NOT SUPPORT THIS COMMAND!\n");
+                return 1;
+            }
+        }
+        else
+        {
+            iom -> put_error("ERROR: FILENAME FORMAT ERROR!\n");
+            return 1;
+        }
+        }break;
+    default:
+        iom -> put_error("ERROR: UNKNOWN ERROR!\n");
+        return 1;break;
+    }
+}
+
+int parser::command(execute_list* elist)
+{
+    if (look == "")
+        return 1;
+    exe_info* einfo = new exe_info;
+    einfo -> set_pathname(look);
+    //std::cout << "1:" << look << std::endl;
+    while(true)
+    {
+        switch(this -> scan())
+        {
+            case '\n':
+            case '\0':
+                elist -> push_exenode(einfo);
+                return 0;break;
+            case '|':
+                elist -> push_exenode(einfo);
+                this -> scan();
+                return '|';break;
+            case '>'://rediection
+                elist -> push_exenode(einfo);
+                elist -> set_redirected(true);
+                return '>';break;
+            case IS_APEND://apend
+                elist -> push_exenode(einfo);
+                elist -> set_apend(true);
+                return IS_APEND;break;
+            default:
+                einfo -> push_arg(look);
+                break;
+        }
+        //std::cout << "2:" << look << std::endl;
+    }
+}
+
+/*exe_info* parser::pushpath()
 {
     exe_info* einfo = new exe_info;
     einfo -> set_pathname(look);
@@ -149,13 +218,21 @@ int parser::make_einfo(exe_info* einfo,execute_list* elist)
             case '|':
                 elist -> push_exenode(einfo);
                 return 1;break;
+            case '>'://rediection
+                execute_list -> set_redirected(true);
+                execute_list -> set_pathname(this -> scan());
+                break;
+            case IS_APEND://apend
+                execute_list -> set_apend(true);
+                execute_list -> set_pathname(this -> scan());
+                break;
             default:
                 einfo -> push_arg(look);
                 break;
         }
         //std::cout << look << std::endl;
     }
-}
+}*/
 
 void parser::list_dir()
 {
@@ -188,8 +265,6 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
         iom -> put_error("ERROR:NOTHING TO EXECUTE!\n");
         return;
     }
-    //if (fork())
-        //wait(NULL);
     else
     {
         int i = 0;
@@ -242,7 +317,7 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
             delete pipe_1;
         if (pipe_2 != NULL)
             delete pipe_2;
-        //exit(0);
+
         for(int i = 0;i < SIZE;i++) wait(NULL);
     }
 }

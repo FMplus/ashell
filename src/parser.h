@@ -15,7 +15,7 @@
 #include"pipe_api.h"
 
 #define IS_SSEQ   257
-#define ADD_RDRCT 258
+#define IS_APEND  258
 
 class parser
 {
@@ -30,8 +30,10 @@ public:
     void move();//lexer
     char read_move();//lexer
     void do_parse();//parser
-    exe_info* pushpath();
-    int make_einfo(exe_info *einfo,execute_list* elist);
+    int input(execute_list* elist);
+    int command(execute_list* elist);
+    //exe_info* pushpath();
+    //int make_einfo(exe_info *einfo,execute_list* elist);
     void list_dir();
     void change_dir(const std::string&path);
     void analysis(execute_list* elist);
