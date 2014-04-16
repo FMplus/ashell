@@ -9,9 +9,12 @@
 
 struct filex:public file_basic{
     public:
-    friend class pipex;
+    friend class redirects;
     ~filex();
     bool open(const string&file_name);
+    bool write_empty(const string&file_name);
+    bool write_after(const string&file_name);
+    int get_fd();
     bool is_open()const;
     void close();
     private:
@@ -33,5 +36,17 @@ class pipex:public pipe_basic{
     private:
     int fd[2];
 };//class pipex
+
+class redirects:public redir_basic{
+    public:
+        redirects();
+        ~redirects();
+        bool redirects_open(const string&file_name);
+        bool apend_open(const string&file_name);
+        int write_tie(TYPE);
+        int close();
+    private:
+        filex* fd;
+};
 
 #endif //_PIPE_X_H

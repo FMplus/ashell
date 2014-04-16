@@ -11,8 +11,25 @@ filex::~filex()
 
 bool filex::open(const string&file_name)
 {
-   this -> file_id = ::open(file_name.data(),O_CREAT|O_WRONLY);
-   return this -> is_open();
+    this -> file_id = ::open(file_name.data(),O_CREAT|O_WRONLY);
+    return this -> is_open();
+}
+
+bool filex::write_empty(const string&file_name)
+{
+    this -> file_id = ::open(file_name.data(),O_CREAT|O_WRONLY|O_TRUNC);
+    return this -> is_open();
+}
+
+bool filex::write_after(const string&file_name)
+{
+    this -> file_id = ::open(file_name.data(),O_CREAT|O_WRONLY|O_APPEND);
+    return this -> is_open();
+}
+
+int filex::get_fd()
+{
+    return this -> file_id;
 }
 
 bool filex::is_open()const
@@ -25,7 +42,6 @@ void filex::close()
     if(this -> is_open())
         ::close(file_id);
 }
-
 
 
 /* class pipex*/
@@ -102,3 +118,48 @@ int write_tie_file(file_basic&file)
 /*
 }
 */
+
+
+/*clase redirects*/
+
+redirects::redirects()
+{
+    this -> fd = new filex;
+}
+
+redirects::~redirects()
+{
+    this -> close();
+    delete fd;
+}
+
+bool redirects::redirects_open(const string&file_name)
+{
+    return fd -> write_empty(file_name);
+}
+
+bool redirects::apend_open(const string&file_name)
+{
+    return fd -> write_after(file_name);
+}
+
+int redirects::write_tie(TYPE t)
+{
+    switch(t){
+    case STD_IN:
+        dup2(fd -> get_fd(),STDIN_FILENO);
+        break;
+    case STD_OUT:
+        dup2(fd -> get_fd(),STDOUT_FILENO);
+        break;
+    case STD_ERR:
+        dup2(fd -> get_fd(),STDERR_FILENO);
+        break;
+    default:;
+    }
+}
+
+int redirects::close()
+{
+    fd -> close();
+}
