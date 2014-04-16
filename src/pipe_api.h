@@ -38,6 +38,7 @@ struct redir_basic{
     virtual bool redirects_open(const string&) = 0;
     virtual bool apend_open(const string&) = 0;
     virtual int write_tie(TYPE) = 0;
+    virtual int close_write() = 0;
     virtual int close() = 0;
 
 };

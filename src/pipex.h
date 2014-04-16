@@ -44,6 +44,7 @@ class redirects:public redir_basic{
         bool redirects_open(const string&file_name);
         bool apend_open(const string&file_name);
         int write_tie(TYPE);
+        int close_write();
         int close();
     private:
         filex* fd;

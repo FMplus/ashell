@@ -159,6 +159,11 @@ int redirects::write_tie(TYPE t)
     }
 }
 
+int redirects::close_write()
+{
+    ::close(fd -> get_fd());
+}
+
 int redirects::close()
 {
     fd -> close();
