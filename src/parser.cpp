@@ -169,7 +169,7 @@ int parser::command(execute_list* elist)
         return 1;
     exe_info* einfo = new exe_info;
     einfo -> set_pathname(look);
-    //std::cout << "1:" << look << std::endl;
+    std::cout << "1:" << look << std::endl;
     while(true)
     {
         switch(this -> scan())
@@ -194,7 +194,7 @@ int parser::command(execute_list* elist)
                 einfo -> push_arg(look);
                 break;
         }
-        //std::cout << "2:" << look << std::endl;
+        std::cout << "2:" << look << std::endl;
     }
 }
 
@@ -307,17 +307,29 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
                     pipe_2 -> close_read();
                     pipe_2 -> write_tie(STD_OUT);
                 }
-                rt -> execute(elist -> at(i) -> get_path(),elist -> at(i) -> args);
+                if ( (i+1) == SIZE && (elist->is_redirected() || elist->is_apend()) )
+                {
+                    redirects* redi = new redirects;
+                    if (elist->is_redirected())
+                    {
+                        redi -> redirects_open(elist -> get_pathname());
+                    }
+                    else if (elist->is_apend())
+                    {
+                        redi -> apend_open(elist -> get_pathname());
+                    }
+                    redi -> write_tie(STD_OUT);
+                    rt -> execute(elist -> at(i) -> get_path(),elist -> at(i) -> args);
+                    redi -> close_write();
+                    //redi -> close();
+                    delete redi;
+                }
+                else
+                    rt -> execute(elist -> at(i) -> get_path(),elist -> at(i) -> args);
+
                 exit(1);
             }
             i++;
-            if (i == SIZE)
-            {
-                if (elist->is_redirected())
-                    this -> redirect(elist,0);
-                else if (elist->is_apend())
-                    this -> redirect(elist,1);
-            }
         }while( i < SIZE);
 
         if (pipe_1 != NULL)
@@ -327,20 +339,4 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
 
         for(int i = 0;i < SIZE;i++) wait(NULL);
     }
-}
-
-void parser::redirect(execute_list* elist,int mode)
-{
-    redirects* redi = new redirects;
-    redi -> write_tie(STD_OUT);
-    if (!mode)
-    {
-        redi -> redirects_open(elist -> get_pathname());
-    }
-    else
-    {
-        redi -> apend_open(elist -> get_pathname());
-    }
-    redi -> close_write();
-    delete redi;
 }

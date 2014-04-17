@@ -37,7 +37,6 @@ public:
     void list_dir();
     void change_dir(const std::string&path);
     void analysis(execute_list* elist);
-    void redirect(execute_list* elist,int mode);
 
 private:
     std::string look;
