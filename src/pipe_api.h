@@ -5,6 +5,7 @@
 
 struct file_basic{
     typedef std::string string;
+    file_basic(){}
     virtual ~file_basic(){}
     virtual bool open(const string&) = 0;
     virtual bool is_open()const = 0;

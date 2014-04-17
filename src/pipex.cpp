@@ -4,6 +4,10 @@
 #include"pipex.h"
 
 /*struct filex*/
+filex::filex()
+{
+    this -> file_id = -1;
+}
 filex::~filex()
 {
     this -> close();
@@ -25,7 +29,7 @@ bool filex::write_empty(const string&file_name)
 
 bool filex::write_after(const string&file_name)
 {
-    this -> file_id = ::open(file_name.data(),O_CREAT|O_WRONLY|O_APPEND);
+    this -> file_id = ::open(file_name.data(),O_CREAT|O_WRONLY|O_APPEND);//|S_IRWXU|S_IRWXG
     std::cout << this -> file_id << std::endl;
     return this -> is_open();
 }

@@ -10,6 +10,7 @@
 struct filex:public file_basic{
     public:
     friend class redirects;
+    filex();
     ~filex();
     bool open(const string&file_name);
     bool write_empty(const string&file_name);
