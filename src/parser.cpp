@@ -119,7 +119,6 @@ void parser::do_parse()
                 if (this -> input(elist))
                     break;
 
-                //std::cout << "filename: " << elist -> get_pathname() << std::endl;
                 this -> analysis(elist);
             }break;
         default:
@@ -169,7 +168,6 @@ int parser::command(execute_list* elist)
         return 1;
     exe_info* einfo = new exe_info;
     einfo -> set_pathname(look);
-    std::cout << "1:" << look << std::endl;
     while(true)
     {
         switch(this -> scan())
@@ -194,45 +192,8 @@ int parser::command(execute_list* elist)
                 einfo -> push_arg(look);
                 break;
         }
-        std::cout << "2:" << look << std::endl;
     }
 }
-
-/*exe_info* parser::pushpath()
-{
-    exe_info* einfo = new exe_info;
-    einfo -> set_pathname(look);
-    return einfo;
-}
-
-int parser::make_einfo(exe_info* einfo,execute_list* elist)
-{
-    while(true)
-    {
-        switch(this -> scan())
-        {
-            case '\n':
-            case '\0':
-                elist -> push_exenode(einfo);
-                return 0;break;
-            case '|':
-                elist -> push_exenode(einfo);
-                return 1;break;
-            case '>'://rediection
-                execute_list -> set_redirected(true);
-                execute_list -> set_pathname(this -> scan());
-                break;
-            case IS_APEND://apend
-                execute_list -> set_apend(true);
-                execute_list -> set_pathname(this -> scan());
-                break;
-            default:
-                einfo -> push_arg(look);
-                break;
-        }
-        //std::cout << look << std::endl;
-    }
-}*/
 
 void parser::list_dir()
 {
@@ -321,7 +282,6 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
                     redi -> write_tie(STD_OUT);
                     rt -> execute(elist -> at(i) -> get_path(),elist -> at(i) -> args);
                     redi -> close_write();
-                    //redi -> close();
                     delete redi;
                 }
                 else

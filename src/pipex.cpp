@@ -15,22 +15,19 @@ filex::~filex()
 
 bool filex::open(const string&file_name)
 {
-    this -> file_id = ::open(file_name.data(),O_CREAT|O_WRONLY);
-    std::cout << this -> file_id << std::endl;
+    this -> file_id = ::open(file_name.data(),O_CREAT|O_RDWR,0666);
     return this -> is_open();
 }
 
 bool filex::write_empty(const string&file_name)
 {
-    this -> file_id = ::open(file_name.data(),O_CREAT|O_WRONLY|O_TRUNC);
-    std::cout << this -> file_id << std::endl;
+    this -> file_id = ::open(file_name.data(),O_CREAT|O_RDWR|O_TRUNC,0666);
     return this -> is_open();
 }
 
 bool filex::write_after(const string&file_name)
 {
-    this -> file_id = ::open(file_name.data(),O_CREAT|O_WRONLY|O_APPEND);//|S_IRWXU|S_IRWXG
-    std::cout << this -> file_id << std::endl;
+    this -> file_id = ::open(file_name.data(),O_CREAT|O_RDWR|O_APPEND,0666);//|S_IRWXU|S_IRWXG
     return this -> is_open();
 }
 
@@ -157,7 +154,6 @@ int redirects::write_tie(TYPE t)
         dup2(fd -> get_fd(),STDIN_FILENO);
         break;
     case STD_OUT:
-    std::cout << fd -> get_fd() << std::endl;
         dup2(fd -> get_fd(),STDOUT_FILENO);
         break;
     case STD_ERR:
