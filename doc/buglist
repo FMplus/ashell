@@ -1,0 +1,20 @@
+2014.4.10
+has the question with the sign " " "
+such as :cat "envx.h"|grep class
+        :cat envx.h | grep class|grep "envx"         is wrong.
+but     :cat envx.h | grep "class"|grep envx         is right.
+
+e.g:
+/home/hdt/fshell/ashell/src#cat pipex.cpp| grep "m"|grep "b"
+用法: grep [选项]... PATTERN [FILE]...
+试用‘grep --help’来获得更多信息。
+
+2014.4.10
+has the question with the fork();
+delete the fork() of the parser.cpp 181 then run will has the result:
+段错误 (核心已转储)
+e.g:
+/home/hdt/fshell/ashell/src#cat pipex.cpp|grep m|grep b
+bool filex::open(const string&file_name)
+段错误 (核心已转储)
+

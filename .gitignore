@@ -4,6 +4,7 @@
 *.tmp
 *.bak
 *.t
+*.out
 !*.c
 !*.cpp
 !*.h

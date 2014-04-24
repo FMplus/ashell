@@ -6,31 +6,45 @@
 #include<dirent.h>
 #include<unistd.h>
 #include<sys/wait.h>
+#include<cstdlib>
 
 #include "shl_io_api.h"
-#include "dir_list.h"
-#define IS_SSEQ 257
+#include "exe_utils.h"
+#include "env.h"
+#include "pipex.h"
+#include"pipe_api.h"
+
+#define IS_SSEQ   257
+#define IS_APEND  258
 
 class parser
 {
 public:
-    parser(shl_io_api*iom,runtime*rt)
-    :iom(iom),rt(rt)
+    parser(shl_io_api*iom,runtime*rt,environment*env)
+    :iom(iom),rt(rt),env(env),peek(' ')
     {}
 
     int skip_space(const std::string&s,const int n);
-    int scan();
-    void do_parse();
+    int scan();//lexer
+    void read();//lexer
+    void move();//lexer
+    char read_move();//lexer
+    void do_parse();//parser
+    int input(execute_list* elist);
+    int command(execute_list* elist);
+    //exe_info* pushpath();
+    //int make_einfo(exe_info *einfo,execute_list* elist);
     void list_dir();
     void change_dir(const std::string&path);
+    void analysis(execute_list* elist);
 
 private:
-    std::string line;
     std::string look;
 
-    shl_io_api*iom;
-    runtime*   rt;
-    class dir_list dlst;
+    shl_io_api*     iom;
+    runtime*        rt;
+    environment*    env;
+    char            peek;
 };
 
 #endif //PAESER
