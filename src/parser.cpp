@@ -1,13 +1,7 @@
 #include "parser.h"
-<<<<<<< HEAD
-#include "list_inode.h"
-#include "console.h"
-
-=======
 #include "pipex.h"
 #include"pipe_api.h"
 #include<semaphore.h>
->>>>>>> lsm/master
 
 int parser::skip_space(const std::string&s,const int n)
 {
@@ -120,23 +114,10 @@ void parser::do_parse()
             }else if(look == "exit"){
                 return;
             }else{
-<<<<<<< HEAD
-                pid_t pid = fork();
-                if(pid == 0){
-                    iom -> put_str("It is in child!!!\n");
-                    rt-> execute(look,dlst.combine());
-                }else if(pid > 0){
-                    iom -> put_str("It is in father!!\n");
-                    wait(NULL);
-                }else{
-                    iom -> put_str("Fork wrong!!!\n");
-                }
-=======
                 execute_list* elist = new execute_list;
 
                 if (this -> input(elist))
                     break;
->>>>>>> lsm/master
 
                 this -> analysis(elist);
             }break;
@@ -214,7 +195,7 @@ int parser::command(execute_list* elist)
     }
 }
 
-void parser::list_dir()//dir
+void parser::list_dir()
 {
     std::string cwd = env -> where();
     DIR*dir = opendir(cwd.data());
@@ -227,22 +208,6 @@ void parser::list_dir()//dir
 
 void parser::change_dir(const std::string&path)
 {
-<<<<<<< HEAD
-    //'path' is the dir_name to change , dlst.combine() is the current path;
-    std::string curpath = dlst.combine() + path;
-    if ( opendir(curpath.c_str()) == NULL )
-    {
-        class console s;
-        s.put_error("erro: can not find "+path);
-        return;
-    }
-    //else
-    std::string tmp,buf;
-    int i = 0;
-    if(path[0] == '/'){
-        dlst.go_root();
-        i++;
-=======
     int flag;
     if((flag=env -> change_dir(path))==CH_OK){
         //
@@ -250,7 +215,6 @@ void parser::change_dir(const std::string&path)
         iom -> put_error("NOT EXIST!\n");
     }else{
         iom -> put_error("ERROR:UNKNOW ERROR!\n");
->>>>>>> lsm/master
     }
 }
 
@@ -335,4 +299,4 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
 
         for(int i = 0;i < SIZE;i++) wait(NULL);
     }
-}//change_dir
+}

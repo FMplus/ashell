@@ -4,17 +4,11 @@
 #include<iostream>
 #include<string>
 #include<list>
-<<<<<<< HEAD
-#include<stdio.h>
-#include<unistd.h>
-#include <fcntl.h>
-=======
 #include<cstdio>
 #include<cstdlib>
 
 #include<unistd.h>
 
->>>>>>> lsm/master
 #include "shl_io_api.h"
 #include "envx.h"
 
