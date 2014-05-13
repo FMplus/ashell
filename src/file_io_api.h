@@ -22,6 +22,10 @@ class file_io_api:public shl_io_api
 void file_io_api::open_file(std::string filename)
 {
     file.open(filename,ios::out|ios::in);
+    if (!file.is_open())
+    {
+        this -> put_error("ERROR: Open " + filename + " fail!");
+    }
 }
 
 std::string file_io_api::get_line()
