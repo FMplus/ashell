@@ -154,7 +154,7 @@ int redirects::write_tie(TYPE t)
         dup2(fd -> get_fd(),STDIN_FILENO);
         break;
     case STD_OUT:
-        dup2(fd -> get_fd(),STDOUT_FILENO);
+        dup2(fd -> get_fd(),STDOUT_FILENO);//copy the file handle
         break;
     case STD_ERR:
         dup2(fd -> get_fd(),STDERR_FILENO);

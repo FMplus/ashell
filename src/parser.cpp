@@ -93,12 +93,18 @@ int parser::scan()
     }
 }
 
+void parser::set_mode(const mode_t mode)
+{
+    this -> mode = mode;
+}
+
 void parser::do_parse()
 {
     std::string buf;
     para_list   args;
     while(true){
-        iom -> put_str( env -> where() + "#");
+        if(mode & MODE_SCRIPT)
+            put_str( env -> where() + "#");
         switch(this -> scan()){
         case '\0':
         case '\n':
@@ -122,7 +128,7 @@ void parser::do_parse()
                 this -> analysis(elist);
             }break;
         default:
-            iom -> put_error("ERROR: UNKNOWN ERROR!\n");
+            put_error("ERROR: UNKNOWN ERROR!\n");
             break;
         }
     }
@@ -146,18 +152,18 @@ int parser::input(execute_list* elist)
                 return 0;
             else
             {
-                iom -> put_error("ERROR: DOES NOT SUPPORT THIS COMMAND!\n");
+                put_error("ERROR: DOES NOT SUPPORT THIS COMMAND!\n");
                 return 1;
             }
         }
         else
         {
-            iom -> put_error("ERROR: FILENAME FORMAT ERROR!\n");
+            put_error("ERROR: FILENAME FORMAT ERROR!\n");
             return 1;
         }
         }break;
     default:
-        iom -> put_error("ERROR: UNKNOWN ERROR!\n");
+        put_error("ERROR: UNKNOWN ERROR!\n");
         return 1;break;
     }
 }
@@ -195,26 +201,15 @@ int parser::command(execute_list* elist)
     }
 }
 
-void parser::list_dir()
-{
-    std::string cwd = env -> where();
-    DIR*dir = opendir(cwd.data());
-    struct dirent* ent = NULL;
-    while(NULL != (ent=readdir(dir))){
-        iom -> put_str(std::string(ent -> d_name) + "\n");
-    }
-    closedir(dir);
-}
-
 void parser::change_dir(const std::string&path)
 {
     int flag;
     if((flag=env -> change_dir(path))==CH_OK){
         //
     }else if(flag == DIR_NOT_EXISTED){
-        iom -> put_error("NOT EXIST!\n");
+        put_error("NOT EXIST!\n");
     }else{
-        iom -> put_error("ERROR:UNKNOW ERROR!\n");
+        put_error("ERROR:UNKNOW ERROR!\n");
     }
 }
 
@@ -223,7 +218,7 @@ void parser::analysis(execute_list* elist)//analysis the option to execute
     int SIZE = elist -> size();
     if (SIZE < 1)
     {
-        iom -> put_error("ERROR:NOTHING TO EXECUTE!\n");
+        put_error("ERROR:NOTHING TO EXECUTE!\n");
         return;
     }
     else

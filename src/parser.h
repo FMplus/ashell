@@ -16,27 +16,48 @@
 
 #define IS_SSEQ   257
 #define IS_APEND  258
+#define MODE_SCRIPT     1
+#define MODE_INTER      0
+#define MODE_STDOUT_CLOSE   (1<<1)
+#define MODE_STDOUT_OPEN    (0<<1)
+#define MODE_STDERR_CLOSE   (1<<2)
+#define MODE_STDERR_OPEN    (0<<2)
 
 class parser
 {
 public:
+    typedef unsigned int mode_t;
+public:
     parser(shl_io_api*iom,runtime*rt,environment*env)
-    :iom(iom),rt(rt),env(env),peek(' ')
+    :iom(iom),rt(rt),env(env),peek(' '),mode(0)
     {}
+
+    void do_parse();//parser
+    void set_mode(const mode_t mode);
+    mode_t get_mode();
+private:
+
 
     int skip_space(const std::string&s,const int n);
     int scan();//lexer
     void read();//lexer
     void move();//lexer
     char read_move();//lexer
-    void do_parse();//parser
+
     int input(execute_list* elist);
     int command(execute_list* elist);
     //exe_info* pushpath();
     //int make_einfo(exe_info *einfo,execute_list* elist);
-    void list_dir();
     void change_dir(const std::string&path);
     void analysis(execute_list* elist);
+    void put_str(const std::string&str){
+        if(mode & MODE_STDOUT_OPEN)
+            iom -> put_str(str);
+    }
+    void put_error(const std::string&str){
+        if(mode & MODE_STDERR_OPEN)
+            iom -> put_err(str);
+    }
 
 private:
     std::string look;
@@ -45,6 +66,7 @@ private:
     runtime*        rt;
     environment*    env;
     char            peek;
+    int             mode;
 };
 
 #endif //PAESER
