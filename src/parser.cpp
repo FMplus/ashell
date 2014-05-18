@@ -3,6 +3,7 @@
 #include"pipe_api.h"
 #include<semaphore.h>
 
+
 int parser::skip_space(const std::string&s,const int n)
 {
     int i = n;
@@ -81,7 +82,8 @@ int parser::scan()
         if(peek != '\n' && peek != ' ' && peek != '\t' && peek != '|' && peek != '>')
             goto l2;
         return IS_SSEQ;
-
+    case -1:
+        return IS_END;
     default:
         do
             look += read_move();
@@ -106,6 +108,8 @@ void parser::do_parse()
         if(mode & MODE_SCRIPT)
             put_str( env -> where() + "#");
         switch(this -> scan()){
+        case IS_END:
+            return;
         case '\0':
         case '\n':
             continue;

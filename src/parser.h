@@ -16,6 +16,7 @@
 
 #define IS_SSEQ   257
 #define IS_APEND  258
+#define IS_END    259
 #define MODE_SCRIPT     1
 #define MODE_INTER      0
 #define MODE_STDOUT_CLOSE   (1<<1)
@@ -56,7 +57,7 @@ private:
     }
     void put_error(const std::string&str){
         if(mode & MODE_STDERR_OPEN)
-            iom -> put_err(str);
+            iom -> put_error(str);
     }
 
 private:
