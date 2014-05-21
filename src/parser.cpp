@@ -35,6 +35,14 @@ int parser::scan()
     static int i = 0;
     char c;
     look.clear();
+    while(this -> peek == ' ')
+        this -> move();
+    if(this -> peek == '#'){
+        while(this -> peek != '\n' && this -> peek != '\0' && this -> peek != IS_END) 
+            this -> move();
+        if(this -> peek == '\n')
+            this -> move();
+    }
 
     l2:
     switch(this -> peek){
@@ -105,7 +113,7 @@ void parser::do_parse()
     std::string buf;
     para_list   args;
     while(true){
-        if(mode & MODE_SCRIPT)
+        if(mode & MODE_INTER)
             put_str( env -> where() + "#");
         switch(this -> scan()){
         case IS_END:

@@ -17,12 +17,12 @@
 #define IS_SSEQ   257
 #define IS_APEND  258
 #define IS_END    259
-#define MODE_SCRIPT     1
-#define MODE_INTER      0
-#define MODE_STDOUT_CLOSE   (1<<1)
-#define MODE_STDOUT_OPEN    (0<<1)
-#define MODE_STDERR_CLOSE   (1<<2)
-#define MODE_STDERR_OPEN    (0<<2)
+#define MODE_SCRIPT     0
+#define MODE_INTER      1
+#define MODE_STDOUT_CLOSE   (0<<1)
+#define MODE_STDOUT_OPEN    (1<<1)
+#define MODE_STDERR_CLOSE   (0<<2)
+#define MODE_STDERR_OPEN    (1<<2)
 
 class parser
 {
@@ -30,7 +30,8 @@ public:
     typedef unsigned int mode_t;
 public:
     parser(shl_io_api*iom,runtime*rt,environment*env)
-    :iom(iom),rt(rt),env(env),peek(' '),mode(0)
+    :iom(iom),rt(rt),env(env),peek(' '),
+    mode(MODE_INTER|MODE_STDOUT_OPEN|MODE_STDERR_OPEN)
     {}
 
     void do_parse();//parser

@@ -12,18 +12,19 @@ int main(int argc,char *argv[])
     if (argc == 1)
     {
         p = new parser(c,c,c);
-
+        p -> do_parse();
     }
     else
     {
         file_io_api*file = new file_io_api;
         file -> open_file(argv[1]);
         p = new parser(file,c,c);
-
+        p -> set_mode(MODE_SCRIPT | MODE_STDERR_OPEN | MODE_STDOUT_OPEN);
+        p -> do_parse();
+        //file -> close()
+        delete file;
     }
-    //parser*p  = new parser(c,c,c);
-    p -> set_mode(MODE_SCRIPT | MODE_STDERR_OPEN | MODE_STDOUT_OPEN);
-    p -> do_parse();
+    
     delete p;
     delete c;
     return 0;

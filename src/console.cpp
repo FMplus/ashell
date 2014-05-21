@@ -51,7 +51,7 @@ void console::execute(const std::string&file_name,const para_list&args)
 
     if (execvp(file_name.data(),m) == -1)
     {
-        //std::cout << errno << std::endl;
+        this -> put_error(file_name); 
         switch (errno){
         case EACCES:
             this -> put_error("ERROR : EACCEX : Without execute permission.\n");
