@@ -106,7 +106,7 @@ int parser::scan()
 void parser::set_mode(const mode_t mode)
 {
     this -> mode = mode;
-    //std::cout << mode << std::endl;
+    std::cout << mode << std::endl;
 }
 
 void parser::do_parse()
