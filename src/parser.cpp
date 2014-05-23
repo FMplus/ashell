@@ -38,7 +38,7 @@ int parser::scan()
     while(this -> peek == ' ')
         this -> move();
     if(this -> peek == '#'){
-        while(this -> peek != '\n' && this -> peek != '\0' && this -> peek != IS_END) 
+        while(this -> peek != '\n' && this -> peek != '\0' && this -> peek != IS_END)
             this -> move();
         if(this -> peek == '\n')
             this -> move();
@@ -106,6 +106,7 @@ int parser::scan()
 void parser::set_mode(const mode_t mode)
 {
     this -> mode = mode;
+    //std::cout << mode << std::endl;
 }
 
 void parser::do_parse()
