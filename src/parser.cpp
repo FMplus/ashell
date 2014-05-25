@@ -1,8 +1,9 @@
 #include "parser.h"
 #include "pipex.h"
 #include"pipe_api.h"
-#include<semaphore.h>
 
+#include<semaphore.h>
+#include<cstdio>
 
 int parser::skip_space(const std::string&s,const int n)
 {
@@ -106,7 +107,16 @@ int parser::scan()
 void parser::set_mode(const mode_t mode)
 {
     this -> mode = mode;
-    std::cout << mode << std::endl;
+    if(!(mode & MODE_STDOUT_OPEN )){
+        int temp = open("/dev/null",O_RDWR);
+        dup2(temp,STDOUT_FILENO);//copy the file handle
+    }
+    if(!(mode & MODE_STDERR_OPEN)){
+        int temp = open("/dev/null",O_RDWR);
+        dup2(temp,STDERR_FILENO);//copy the file handle
+    }
+
+    //std::cout << mode << std::endl;
 }
 
 void parser::do_parse()

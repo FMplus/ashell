@@ -4,67 +4,127 @@
 #include "console.h"
 #include "file_io_api.h"
 #include <string.h>
+#include <stdio.h>
+#define VERSION_MAIN 0
+#define VERSION_SUB 3
+
 typedef std::string string;
+
+
+#define PROGNAME "ashell"
+static int mode_inter = 1;
+static int mode_stdout = (1<<1);
+static int mode_stderr = (1<<2);
+static const char* progname = PROGNAME;
+static char* filename;
+static int doargs(int argc,char *argv[]);
+static void usage(const char* message);
+static void vers(const char* message);
 
 int main(int argc,char *argv[])
 {
-    int mode_inter = 1, mode_stdout = (1<<1), mode_stderr = (1<<2);
-    int counter = 1;
-    parser*p;
+    parser*p = NULL;
     console*c = new console;
-    if (argc == 1)
+    int i = doargs(argc,argv);
+    if (mode_inter == 0)
     {
-        p = new parser(c,c,c);
+        file_io_api*file = new file_io_api;
+        file -> open_file(filename);
+        p = new parser(file,c,c);
+        p -> set_mode(MODE_SCRIPT|mode_stdout|mode_stderr);
         p -> do_parse();
     }
-    else
+    else if (i)
     {
-        while (counter < argc)
+        p = new parser(c,c,c);
+        p -> set_mode(mode_inter|mode_stdout|mode_stderr);
+        p -> do_parse();
+    }
+
+    if (p != NULL)
+        delete p;
+    delete c;
+    return 0;
+}
+
+#define IS(s)	(strcmp(argv[i],s)==0)
+
+static int doargs(int argc,char *argv[])
+{
+    int i = 1,version = 0,help = 0;
+    progname = argv[0];
+    for ( i = 1; i < argc; i++ )
+    {
+        if (IS("-no-stdout"))
         {
-            string str = argv[counter];
-            if (str == "-no-stdout\0")
+            //printf("close stdout \n");
+            mode_stdout = (0<<1);
+        }
+        else if (IS("-no-stderr"))
+        {
+            //printf("close stderr \n");
+            mode_stderr = (0<<2);
+        }
+        else if (IS("-version"))
+        {
+            version++;
+        }
+        else if (IS("-help"))
+        {
+            help++;
+        }
+        else
+        {
+            if (mode_inter != 0)
             {
-                std::cout << "1.stdout\n";
-                mode_stdout = (0<<1);
-            }
-            else if (str == "-no-stderr\0")
-            {
-                std::cout << "2.stderr\n";
-                mode_stderr = (0<<2);
-            }
-            else if (str == "-version\0")
-            {
-                std::cout << "3.version\n";
-                //a file of version?
-            }
-            else if (str == "-help\0")
-            {
-                std::cout << "4.help\n";
-                //a file of help?
+                mode_inter = 0;
+                filename = argv[i];
             }
             else
             {
-                file_io_api*file = new file_io_api;
-                file -> open_file(argv[counter]);
-                p = new parser(file,c,c);
-                mode_inter = 0;
-                p -> set_mode( mode_inter | mode_stdout | mode_stderr );
-                p -> do_parse();
-                //file -> close()
-                delete file;
+                std::cerr<<"Can't recognize the option " <<argv[i]<< " many error!\n";//error;
+                return 0;
             }
-            counter++;
-        }
-        if (mode_inter != 0)
-        {
-            p = new parser(c,c,c);
-            p -> set_mode( mode_inter | mode_stdout | mode_stderr );
-            p -> do_parse();
         }
     }
+    if (version)
+    {
+        vers(progname);
+        if (version == (argc - 1))
+            exit(EXIT_SUCCESS);
+    }
+    if (help)
+    {
+        usage(progname);
+        if (help == (argc - 1))
+            exit(EXIT_SUCCESS);
+    }
+    return i;
+}
 
+static void vers(const char* message)
+{
+    printf("version: v%d.%d\n",VERSION_MAIN,VERSION_SUB);
+}
 
-    delete p;
-    delete c;
-    return 0;
+static void usage(const char* message)
+{
+    if (message == progname)
+    {
+        printf(
+            "usage: %s [options] \n"
+            "Available options are:\n"
+            "-no-stdout    close the stdout\n"
+            "-no-stderr    close the srderr\n"
+            "-version      show the version information\n"
+            "-help         show the usage\n"
+            "[filename]    execute command in the file\n"
+            ,progname);
+        //exit(EXIT_SUCCESS);
+    }
+    else
+    {
+        fprintf(stderr,"Error option!\n");
+        exit(EXIT_FAILURE);
+    }
 }
