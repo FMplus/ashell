@@ -115,7 +115,7 @@ static void usage(const char* message)
             "usage: %s [options] \n"
             "Available options are:\n"
             "-no-stdout    close the stdout\n"
-            "-no-stderr    close the srderr\n"
+            "-no-stderr    close the stderr\n"
             "-version      show the version information\n"
             "-help         show the usage\n"
             "[filename]    execute command in the file\n"
@@ -124,7 +124,7 @@ static void usage(const char* message)
     }
     else
     {
-        fprintf(stderr,"Error option!\n");
+        std::cerr << "Error option!" << std::endl;
         exit(EXIT_FAILURE);
     }
 }
